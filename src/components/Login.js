@@ -15,7 +15,6 @@ import Container from '@material-ui/core/Container';
 import service from './../service/UserService';
 import { useHistory } from 'react-router-dom';
 import React, { useState, useContext } from 'react';
-import { Link } from 'react-router-dom';
 
 //Styles that are used in the login page
 const useStyles = makeStyles((theme) => ({
@@ -107,7 +106,7 @@ export default function Component(props) {
             fullWidth
             variant="contained"
             color="primary"
-            onClick={this.handleSubmit}
+            onClick={handleSubmit}
           >
             Login
           </Button>

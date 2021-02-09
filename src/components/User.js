@@ -32,6 +32,6 @@ var  User = (function() {
         getFirstName: getFirstName,
         setFirstName: setFirstName,
     }
-})();
+});
 
 export default User;

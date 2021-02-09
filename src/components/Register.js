@@ -14,7 +14,6 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import React, { useState, useContext } from 'react';
-import { Link } from 'react-router-dom';
 import service from './../service/UserService';
 import { useHistory } from 'react-router-dom';
 
@@ -184,7 +183,7 @@ export default function Component(props) {
             fullWidth
             variant="contained"
             color="primary"
-            className={this.handleSubmit}
+            className={handleSubmit}
           >
             Register
           </Button>
