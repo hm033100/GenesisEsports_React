@@ -107,7 +107,7 @@ export default function Component(props) {
             fullWidth
             variant="contained"
             color="primary"
-            onClick={handleSubmit}
+            onClick={this.handleSubmit}
           >
             Login
           </Button>

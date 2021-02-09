@@ -15,6 +15,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import service from './../service/UserService';
+import { useHistory } from 'react-router-dom';
 
 //Styles needed for the page
 const useStyles = makeStyles((theme) => ({
@@ -44,20 +46,19 @@ const useStyles = makeStyles((theme) => ({
  */
 export default function Component(props) {
   const classes = useStyles();
-
-  const classes = useStyles();
-
   let history = useHistory();
+
+
 
   const handleSubmit = async (event) => {
     let json = JSON.stringify({
-      "firstName": "",
-      "lastname": "",
-      "email": "",
-      "phoneNumber": "",
-      "game": "",
-      "username": props.username_login,
-      "password": props.password_login
+      "firstName": props.firstName,
+      "lastname": props.lastName,
+      "email": props.email,
+      "phoneNumber": props.honeNumber,
+      "game": props.game,
+      "username": props.username_register,
+      "password": props.password_register
     });
 
     let status = await service.register(json);
@@ -183,7 +184,7 @@ export default function Component(props) {
             fullWidth
             variant="contained"
             color="primary"
-            className={classes.handleSubmit}
+            className={this.handleSubmit}
           >
             Register
           </Button>

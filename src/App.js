@@ -9,24 +9,18 @@
  //Necessary imports for the application
 import './App.css';
 import React from 'react';
-import User from './components/User';
 import LoginRegister from './pages/LoginRegister';
 import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage.js';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { EntryContext } from './context/EntryContext.js';
 
 /**
  * This is the application that runs in the React Frontend
  */
-function App() {
-
-  //Define the entry ID and set context 
-  const [entryId, setEntryContext] = React.useState("Null");
+export default function App() {
 
   //Return a path with router and switches so it is easy for the developer to make calls.
   return (
-    <EntryContext.Provider value={[entryId, setEntryContext]}>
       <Router>
           <Switch>
             <Route exact path="/HomePage">
@@ -47,21 +41,6 @@ function App() {
             </Route>
           </Switch>
       </Router>
-    </EntryContext.Provider>
   );
-
-  /**
-   * TESTING PURPOSES: IGNORE
-   */
-  // User.username = "hermesmimini";
-  // User.password = "Mesi1234";
-
-  // return (
-  //   <div className="App">
-  //     <Navbar/>
-  //     <LoginRegister/>
-  //   </div>
-  // );
 }
 
-export default App;
