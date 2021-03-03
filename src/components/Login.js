@@ -14,7 +14,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import service from './../service/UserService';
 import { useHistory } from 'react-router-dom';
-import React, { useState, useContext } from 'react';
+import React from 'react';
 
 //Styles that are used in the login page
 const useStyles = makeStyles((theme) => ({
@@ -46,6 +46,7 @@ export default function Component(props) {
   let history = useHistory();
 
   const handleSubmit = async (event) => {
+    event.preventDefault();
     let json = JSON.stringify({
       "firstName": "",
       "lastname": "",
@@ -57,10 +58,9 @@ export default function Component(props) {
     });
 
     let status = await service.loginUser(json);
-    event.preventDefault();
-
+    
     //if there is a result go to homepage
-    if (status != ""){
+    if (status !== ""){
       history.push("/HomePage")
     } else {
       alert("Failed to Login/Register!")

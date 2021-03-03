@@ -13,7 +13,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import React, { useState, useContext } from 'react';
+import React from 'react';
 import service from './../service/UserService';
 import { useHistory } from 'react-router-dom';
 
@@ -50,25 +50,28 @@ export default function Component(props) {
 
 
   const handleSubmit = async (event) => {
+    event.preventDefault();
     let json = JSON.stringify({
       "firstName": props.firstName,
       "lastname": props.lastName,
       "email": props.email,
-      "phoneNumber": props.honeNumber,
+      "phoneNumber": props.phoneNumber,
       "game": props.game,
       "username": props.username_register,
       "password": props.password_register
     });
 
-    let status = await service.register(json);
-    event.preventDefault();
+
+    let status = await service.registerUser(json);
+
 
     //if there is a result go to homepage
-    if (status != ""){
+    if (status !== ""){
       history.push("/HomePage")
     } else {
       alert("Failed to Login/Register!")
     }
+  }
 
   //The view that is returned: Next revision will have all these inputs with data validation 
   return (
@@ -183,7 +186,7 @@ export default function Component(props) {
             fullWidth
             variant="contained"
             color="primary"
-            className={handleSubmit}
+            onClick={handleSubmit}
           >
             Register
           </Button>
@@ -191,5 +194,4 @@ export default function Component(props) {
       </div>
     </Container>
   );
-}
 }

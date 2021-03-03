@@ -11,7 +11,7 @@
 import Login from './../components/Login';
 import Register from './../components/Register';
 import Grid from '@material-ui/core/Grid';
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 
 export default function LoginRegister(props){
 
