@@ -15,6 +15,7 @@ import Container from '@material-ui/core/Container';
 import service from './../service/UserService';
 import { useHistory } from 'react-router-dom';
 import React from 'react';
+import Cookies from 'universal-cookie';
 
 //Styles that are used in the login page
 const useStyles = makeStyles((theme) => ({
@@ -44,6 +45,7 @@ export default function Component(props) {
   const classes = useStyles();
 
   let history = useHistory();
+  const cookies = new Cookies();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -58,6 +60,11 @@ export default function Component(props) {
     });
 
     let status = await service.loginUser(json);
+    //console.log(status)
+
+    cookies.set('Id', status._id, { path: '/' })
+    cookies.set('username', status.username, { path: '/' })
+    cookies.set('password', status.password,{ path: '/' })
     
     //if there is a result go to homepage
     if (status !== ""){

@@ -11,7 +11,8 @@ import './App.css';
 import React from 'react';
 import LoginRegister from './pages/LoginRegister';
 import Navbar from './components/Navbar';
-import HomePage from './pages/HomePage.js';
+import HomePage from './pages/HomePage';
+import UserInfo from './pages/UserInfo'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 /**
@@ -38,6 +39,10 @@ export default function App() {
             <Route exact path="/Register">
               <Navbar/>
               <LoginRegister/>
+            </Route>
+            <Route exact path="/UserInfo">
+              <Navbar/>
+              <UserInfo/>
             </Route>
           </Switch>
       </Router>

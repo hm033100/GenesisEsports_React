@@ -31,17 +31,35 @@ const useStyles = makeStyles((theme) => ({
 export default function ButtonAppBar() {
   const classes = useStyles();
 
-  return (
-    <div className={classes.root}>
-      <AppBar position="static">
+  let navbar;
+
+  if (window.location.pathname === "/LoginRegister") {
+    navbar =
+    <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
             Genesis Esports
-            <Button href="/LoginRegister" color="inherit">Home Page</Button>
           </Typography>
-          <Button href="/LoginRegister" color="inherit">Home Page</Button>
         </Toolbar>
       </AppBar>
+  } else {
+    navbar =
+    <AppBar position="static">
+        <Toolbar>
+          <Typography variant="h6" className={classes.title}>
+            Genesis Esports
+            <Button href="/Teams" color="inherit">Teams</Button>
+            <Button href="/UserInfo" color="inherit">My Info</Button>
+            <Button href="/Matches" color="inherit">Matches</Button>
+          </Typography>
+          <Button href="/LoginRegister" color="inherit">Logout</Button>
+        </Toolbar>
+      </AppBar>
+  }
+
+  return (
+    <div className={classes.root}>
+      {navbar}
     </div>
   );
 }

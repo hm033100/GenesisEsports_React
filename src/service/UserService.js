@@ -45,6 +45,39 @@ class UserService {
         return response.data;
     }
 
+    /**
+     * This function will make an axios call to the Spring Rest API, it will send a JSON user object to be added to the database. 
+     * @param {*} _id 
+     */
+    async getUser(_id) {
+        const axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json;charset=UTF-8',
+                "Access-Control-Allow-Origin": "*",
+            }
+        };
+
+        const response = await axios.post("http://localhost:8080/users/id", _id, axiosConfig);
+        return response.data;
+    }
+
+    /**
+     * This function will make an axios call to the Spring Rest API, it will send a JSON user object to be added to the database. 
+     * @param {*} json 
+     */
+     async editUser(json) {
+
+        const axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json;charset=UTF-8',
+                "Access-Control-Allow-Origin": "*",
+            }
+        };
+
+        const response = await axios.post("http://localhost:8080/users/save", json, axiosConfig);
+        return response.data;
+    }
+
 }
 
 export default new UserService();
