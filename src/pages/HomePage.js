@@ -7,7 +7,7 @@
  */
 
  //Necessary imports for the page
-import React from 'react';
+ import React, {  useState, useEffect } from 'react';
 import { createMuiTheme, responsiveFontSizes, ThemeProvider } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Cookies from 'universal-cookie';
@@ -16,10 +16,17 @@ import Cookies from 'universal-cookie';
 let theme = createMuiTheme();
 theme = responsiveFontSizes(theme);
 const cookies = new Cookies();
-var username = cookies.get('username');
+
 
 
 export default function ResponsiveFontSizes() {
+
+  const[username, setUsername] = useState('');
+
+  useEffect(() => {
+  setUsername(cookies.get('username'))
+}, []);
+
   return (
     <div>
       <ThemeProvider theme={theme}>

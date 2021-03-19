@@ -55,11 +55,10 @@ export default function Component(props) {
      */
     const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log("In handle submit");
         let json = JSON.stringify({
         "_id": _id,
         "firstName": props.firstName,
-        "lastname": props.lastName,
+        "lastName": props.lastName,
         "email": props.email,
         "phoneNumber": props.phoneNumber,
         "game": props.game,
@@ -75,7 +74,7 @@ export default function Component(props) {
             history.push("/UserInfo")
         } else {
             alert("Failed to Edit User!")
-      }
+        }
     }
 
     /**

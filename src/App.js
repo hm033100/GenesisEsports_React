@@ -12,7 +12,8 @@ import React from 'react';
 import LoginRegister from './pages/LoginRegister';
 import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
-import UserInfo from './pages/UserInfo'
+import UserInfo from './pages/UserInfo';
+import TeamInfo from './pages/TeamInfo';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 /**
@@ -22,8 +23,16 @@ export default function App() {
 
   //Return a path with router and switches so it is easy for the developer to make calls.
   return (
+    // <div style={{ 
+    //   backgroundImage: `url(${Image})`
+    // }}>
+    <div>
       <Router>
           <Switch>
+          <Route exact path="/">
+              <Navbar/>
+              <HomePage/>
+            </Route>
             <Route exact path="/HomePage">
               <Navbar/>
               <HomePage/>
@@ -44,8 +53,13 @@ export default function App() {
               <Navbar/>
               <UserInfo/>
             </Route>
+            <Route exact path="/TeamInfo">
+              <Navbar/>
+              <TeamInfo/>
+            </Route>
           </Switch>
       </Router>
+    </div>
   );
 }
 

@@ -47,9 +47,9 @@ class UserService {
 
     /**
      * This function will make an axios call to the Spring Rest API, it will send a JSON user object to be added to the database. 
-     * @param {*} _id 
+     * @param {*} json 
      */
-    async getUser(_id) {
+    async getUser(json) {
         const axiosConfig = {
             headers: {
                 'Content-Type': 'application/json;charset=UTF-8',
@@ -57,7 +57,7 @@ class UserService {
             }
         };
 
-        const response = await axios.post("http://localhost:8080/users/id", _id, axiosConfig);
+        const response = await axios.post("http://localhost:8080/users/id", json, axiosConfig);
         return response.data;
     }
 

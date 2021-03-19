@@ -16,6 +16,7 @@ import Container from '@material-ui/core/Container';
 import React from 'react';
 import service from './../service/UserService';
 import { useHistory } from 'react-router-dom';
+import Cookies from 'universal-cookie';
 
 //Styles needed for the page
 const useStyles = makeStyles((theme) => ({
@@ -46,14 +47,16 @@ const useStyles = makeStyles((theme) => ({
 export default function Component(props) {
   const classes = useStyles();
   let history = useHistory();
+  const cookies = new Cookies();
 
 
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     let json = JSON.stringify({
+      "team_id": "",
       "firstName": props.firstName,
-      "lastname": props.lastName,
+      "lastName": props.lastName,
       "email": props.email,
       "phoneNumber": props.phoneNumber,
       "game": props.game,
@@ -63,6 +66,10 @@ export default function Component(props) {
 
 
     let status = await service.registerUser(json);
+
+    cookies.set('Id', status._id, { path: '/' })
+    cookies.set('username', status.username, { path: '/' })
+    cookies.set('password', status.password,{ path: '/' })
 
 
     //if there is a result go to homepage

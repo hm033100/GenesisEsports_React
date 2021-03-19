@@ -16,36 +16,43 @@ const _id = cookies.get('Id');
  */
 export default function Component(props) {
 
-    //Create constants for the User Display Form
-    const[username, setUsername] = useState('');
-    const[password, setPassword] = useState('');
-    const[email, setEmail] = useState('');
-    const[phoneNumber, setPhoneNumber] = useState('');
-    const[game, setGame] = useState('');
-    const[firstName, setFirstName] = useState('');
-    const[lastName, setLastName] = useState('');
     const[data, setData] = useState();
     const [isLoading, setLoading] = useState(true);
 
     //Setup onChange constants in order to use the texboxed to edit the user information (Work In Progress)
     const onChangeUsername = (event) => {
-        setUsername(event.target.value);
+        setData({
+            ...data,
+            username: event.target.value
+        })
     }
     
     const onChangePassword = (event) => {
-        setPassword(event.target.value);
+        setData({
+            ...data,
+            password: event.target.value
+        })
     }
     
     const onChangeEmail = (event) => {
-        setEmail(event.target.value);
+        setData({
+            ...data,
+            email: event.target.value
+        })
     }
     
     const onChangePhoneNumber = (event) => {
-        setPhoneNumber(event.target.value);
+        setData({
+            ...data,
+            phoneNumber: event.target.value
+        })
     }
     
     const onChangeGame = (event) => {
-        setGame(event.target.value);
+        setData({
+            ...data,
+            game: event.target.value
+        })
     }
     
     const onChangeFirstName = (event) => {
@@ -56,7 +63,10 @@ export default function Component(props) {
     }
     
     const onChangeLastName = (event) => {
-        setLastName(event.target.value);
+        setData({
+            ...data,
+            lastName: event.target.value
+        })
     }
 
     /**

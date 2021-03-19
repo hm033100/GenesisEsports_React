@@ -11,7 +11,11 @@
 import Login from './../components/Login';
 import Register from './../components/Register';
 import Grid from '@material-ui/core/Grid';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Cookies from 'universal-cookie';
+
+//Cookies (session) - The session used to grab the user and show their information
+const cookies = new Cookies();
 
 export default function LoginRegister(props){
 
@@ -64,6 +68,13 @@ export default function LoginRegister(props){
   const onChangeLastName = (event) => {
     setLastName(event.target.value);
   }
+
+  useEffect(() => {
+    cookies.remove('Id');
+    cookies.remove('username');
+    cookies.remove('password');
+  }, []);
+
     //Return function that will return the Register and Login Grid with the components insid
     return(
       //define grid container

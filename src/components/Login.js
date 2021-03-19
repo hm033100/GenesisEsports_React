@@ -50,11 +50,6 @@ export default function Component(props) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     let json = JSON.stringify({
-      "firstName": "",
-      "lastname": "",
-      "email": "",
-      "phoneNumber": "",
-      "game": "",
       "username": props.username_login,
       "password": props.password_login
     });

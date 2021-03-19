@@ -48,7 +48,7 @@ export default function ButtonAppBar() {
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
             Genesis Esports
-            <Button href="/Teams" color="inherit">Teams</Button>
+            <Button href="/TeamInfo" color="inherit">Teams</Button>
             <Button href="/UserInfo" color="inherit">My Info</Button>
             <Button href="/Matches" color="inherit">Matches</Button>
           </Typography>
