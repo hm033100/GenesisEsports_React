@@ -1,13 +1,13 @@
 import axios from 'axios';
 
-class TeamService {
-    async getAllTeams(){
+class MatchService {
+    async getAllMatches(){
 
-        const response = await axios.get("http://localhost:8080/teams");
+        const response = await axios.get("http://localhost:8080/matches");
         return response.data;
     }
 
-    async getTeam(json) {
+    async getMatch(json) {
         const axiosConfig = {
             headers: {
                 'Content-Type': 'application/json;charset=UTF-8',
@@ -15,24 +15,11 @@ class TeamService {
             }
         };
 
-        const response = await axios.post("http://localhost:8080/teams/id", json, axiosConfig);
+        const response = await axios.post("http://localhost:8080/matches/id", json, axiosConfig);
         return response.data;
     }
 
-    async createTeam(json) {
-
-        const axiosConfig = {
-            headers: {
-                'Content-Type': 'application/json;charset=UTF-8',
-                "Access-Control-Allow-Origin": "*",
-            }
-        };
-
-        const response = await axios.post("http://localhost:8080/teams/save", json, axiosConfig);
-        return response.data;
-    }
-
-    async deleteTeam(json) {
+    async createMatch(json) {
 
         const axiosConfig = {
             headers: {
@@ -41,9 +28,22 @@ class TeamService {
             }
         };
 
-        const response = await axios.post("http://localhost:8080/teams/delete", json, axiosConfig);
+        const response = await axios.post("http://localhost:8080/matches/save", json, axiosConfig);
+        return response.data;
+    }
+
+    async deleteMatch(json) {
+
+        const axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json;charset=UTF-8',
+                "Access-Control-Allow-Origin": "*",
+            }
+        };
+
+        const response = await axios.post("http://localhost:8080/matches/delete", json, axiosConfig);
         return response.data;
     }
 }
 
-export default new TeamService();
+export default new MatchService();

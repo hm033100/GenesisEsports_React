@@ -137,6 +137,7 @@ export default function Component(props) {
                 onChangeUsername = {onChangeUsername}
                 password = {data?.password}
                 onChangePassword = {onChangePassword}
+                teamID = {data?.team_id}
             />
         )}
     </div>

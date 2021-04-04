@@ -17,6 +17,7 @@ import React from 'react';
 import service from './../service/UserService';
 import { useHistory } from 'react-router-dom';
 import Cookies from 'universal-cookie';
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
 //Styles needed for the page
 const useStyles = makeStyles((theme) => ({
@@ -64,19 +65,28 @@ export default function Component(props) {
       "password": props.password_register
     });
 
+    let users = await service.getAllUsers();
+    let isDuplicate = false;
 
-    let status = await service.registerUser(json);
+    for (let i = 0; i < users.length; i++) {
+      if (users[i].username === props.username_register) {
+        isDuplicate = true;
+      }
+    }
 
-    cookies.set('Id', status._id, { path: '/' })
-    cookies.set('username', status.username, { path: '/' })
-    cookies.set('password', status.password,{ path: '/' })
+    if (isDuplicate !== true) {
+      let status = await service.registerUser(json);
+      cookies.set('Id', status._id, { path: '/' })
+      cookies.set('username', status.username, { path: '/' })
+      cookies.set('password', status.password, { path: '/' })
+    }
 
 
     //if there is a result go to homepage
-    if (status !== ""){
+    if (isDuplicate !== true) {
       history.push("/HomePage")
     } else {
-      alert("Failed to Login/Register!")
+      alert("Failed to Login/Register! Username is already taken!")
     }
   }
 
@@ -88,9 +98,10 @@ export default function Component(props) {
         <Typography component="h1" variant="h5">
           Register
         </Typography>
-        <form className={classes.form} noValidate>
-        {/* Firstname Field */}
-        <TextField
+        <ValidatorForm onSubmit={handleSubmit} onError={errors => console.log(errors)}>
+          {/* Firstname Field */}
+          <TextValidator
+            error=""
             variant="outlined"
             margin="normal"
             required
@@ -100,11 +111,13 @@ export default function Component(props) {
             name="firstname"
             autoComplete="firstname"
             autoFocus
-            onChange = {props.onChangeFirstName}
+            validators={['required', 'matchRegexp:^[a-zA-Z]+$', 'matchRegexp:^.{2,15}$']}
+            errorMessages={['This field is required', 'Can only contain letters', 'Must be 2 to 15 characters']}
+            onChange={props.onChangeFirstName}
             value={props.firstName}
           />
           {/* Lastname Field */}
-          <TextField
+          <TextValidator
             variant="outlined"
             margin="normal"
             required
@@ -114,12 +127,14 @@ export default function Component(props) {
             name="lastname"
             autoComplete="lastname"
             autoFocus
-            onChange = {props.onChangeLastName}
+            validators={['required', 'matchRegexp:^[a-zA-Z]+$', 'matchRegexp:^.{2,15}$']}
+            errorMessages={['This field is required', 'Can only contain letters', 'Must be 2 to 15 characters']}
+            onChange={props.onChangeLastName}
             value={props.lastName}
 
           />
           {/* Email Field */}
-          <TextField
+          <TextValidator
             variant="outlined"
             margin="normal"
             required
@@ -129,11 +144,13 @@ export default function Component(props) {
             name="email"
             autoComplete="email"
             autoFocus
-            onChange = {props.onChangeEmail}
+            validators={['required', 'isEmail']}
+            errorMessages={['This field is required', 'Invalid email']}
+            onChange={props.onChangeEmail}
             value={props.email}
           />
           {/* PhoneNumber Field */}
-          <TextField
+          <TextValidator
             variant="outlined"
             margin="normal"
             required
@@ -143,11 +160,13 @@ export default function Component(props) {
             name="phonenumber"
             autoComplete="phonenumber"
             autoFocus
-            onChange = {props.onChangePhoneNumber}
+            validators={['required', 'matchRegexp:^[0-9]+$', 'matchRegexp:^.{9,32}$']}
+            errorMessages={['This field is required', 'Can only contain numbers', 'Must be 9 to 32 characters']}
+            onChange={props.onChangePhoneNumber}
             value={props.phoneNumber}
           />
           {/* Game Field */}
-          <TextField
+          <TextValidator
             variant="outlined"
             margin="normal"
             required
@@ -157,11 +176,13 @@ export default function Component(props) {
             name="game"
             autoComplete="game"
             autoFocus
-            onChange = {props.onChangeGame}
+            validators={['required', 'matchRegexp:^[a-zA-Z0-9]+$', 'matchRegexp:^.{2,32}$']}
+            errorMessages={['This field is required', 'Can only contain letters and numbers', 'Must be 8 to 32 characters']}
+            onChange={props.onChangeGame}
             value={props.game}
           />
           {/* Username Field */}
-          <TextField
+          <TextValidator
             variant="outlined"
             margin="normal"
             required
@@ -171,11 +192,13 @@ export default function Component(props) {
             name="username"
             autoComplete="username"
             autoFocus
-            onChange = {props.onChangeUsernameRegister}
+            validators={['required', 'matchRegexp:^[a-zA-Z0-9]+$', 'matchRegexp:^.{4,32}$']}
+            errorMessages={['This field is required', 'Can only contain letters and numbers', 'Must be 4 to 32 characters']}
+            onChange={props.onChangeUsernameRegister}
             value={props.username_register}
           />
           {/* Password Field and will contain password type */}
-          <TextField
+          <TextValidator
             variant="outlined"
             margin="normal"
             required
@@ -185,19 +208,21 @@ export default function Component(props) {
             type="password"
             id="password"
             autoComplete="current-password"
-            onChange = {props.onChangePasswordRegister}
+            validators={['required', 'matchRegexp:^.{8,32}$', 'matchRegexp:^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[]:;<>,.?/~_+-=|).{8,32}$']}
+            errorMessages={['This field is required', 'Must be 8 to 32 characters', 'Minimum of one uppercase, lowercase, number, and symbol']}
+            onChange={props.onChangePasswordRegister}
             value={props.password_register}
           />
+          <TextField/>
           <Button
             type="submit"
             fullWidth
             variant="contained"
             color="primary"
-            onClick={handleSubmit}
           >
             Register
           </Button>
-        </form>
+        </ValidatorForm>
       </div>
     </Container>
   );

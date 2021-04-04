@@ -7,6 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import Container from '@material-ui/core/Container';
 import service from '../service/UserService';
 import { useHistory } from 'react-router-dom';
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
 
 //Styles needed for the page
@@ -57,6 +58,7 @@ export default function Component(props) {
         event.preventDefault();
         let json = JSON.stringify({
         "_id": _id,
+        "team_id": props.teamID,
         "firstName": props.firstName,
         "lastName": props.lastName,
         "email": props.email,
@@ -84,9 +86,9 @@ export default function Component(props) {
         <Container component="main" maxWidth="xs">
             <CssBaseline/>
             <div className={classes.paper} >
-                <form className={classes.form} noValidate>
+            <ValidatorForm onSubmit={handleSubmit} onError={errors => console.log(errors)}>
                     {/* Firstname Field */}
-                    <TextField
+                    <TextValidator
                         variant="outlined"
                         margin="normal"
                         required
@@ -96,11 +98,13 @@ export default function Component(props) {
                         name="firstname"
                         autoComplete="firstname"
                         autoFocus
+                        validators={['required', 'matchRegexp:^[a-zA-Z]+$', 'matchRegexp:^.{2,15}$']}
+                        errorMessages={['This field is required', 'Can only contain letters', 'Must be 2 to 15 characters']}
                         onChange = {props.onChangeFirstName}
                         value={props.firstName}
                     />
                     {/* Lastname Field */}
-                    <TextField
+                    <TextValidator
                         variant="outlined"
                         margin="normal"
                         required
@@ -110,11 +114,13 @@ export default function Component(props) {
                         name="lastname"
                         autoComplete="lastname"
                         autoFocus
+                        validators={['required', 'matchRegexp:^[a-zA-Z]+$', 'matchRegexp:^.{2,15}$']}
+                        errorMessages={['This field is required', 'Can only contain letters', 'Must be 2 to 15 characters']}
                         onChange = {props.onChangeLastName}
                         value={props.lastName}
                     />
                     {/* Email Field */}
-                    <TextField
+                    <TextValidator
                         variant="outlined"
                         margin="normal"
                         required
@@ -124,11 +130,13 @@ export default function Component(props) {
                         name="email"
                         autoComplete="email"
                         autoFocus
+                        validators={['required', 'isEmail']}
+                        errorMessages={['This field is required', 'Invalid email']}
                         onChange = {props.onChangeEmail}
                         value={props.email}
                     />
                     {/* PhoneNumber Field */}
-                    <TextField
+                    <TextValidator
                         variant="outlined"
                         margin="normal"
                         required
@@ -138,11 +146,13 @@ export default function Component(props) {
                         name="phonenumber"
                         autoComplete="phonenumber"
                         autoFocus
+                        validators={['required', 'matchRegexp:^[0-9]+$', 'matchRegexp:^.{9,32}$']}
+                        errorMessages={['This field is required', 'Can only contain numbers', 'Must be 9 to 32 characters']}
                         onChange = {props.onChangePhoneNumber}
                         value={props.phoneNumber}
                     />
                     {/* Game Field */}
-                    <TextField
+                    <TextValidator
                         variant="outlined"
                         margin="normal"
                         required
@@ -152,11 +162,13 @@ export default function Component(props) {
                         name="game"
                         autoComplete="game"
                         autoFocus
+                        validators={['required', 'matchRegexp:^[a-zA-Z0-9]+$', 'matchRegexp:^.{2,32}$']}
+                        errorMessages={['This field is required', 'Can only contain letters and numbers', 'Must be 8 to 32 characters']}
                         onChange = {props.onChangeGame}
                         value={props.game}
                     />
                     {/* Username Field */}
-                    <TextField
+                    <TextValidator
                         variant="outlined"
                         margin="normal"
                         required
@@ -166,11 +178,13 @@ export default function Component(props) {
                         name="username"
                         autoComplete="username"
                         autoFocus
+                        validators={['required', 'matchRegexp:^[a-zA-Z0-9]+$', 'matchRegexp:^.{4,32}$']}
+                        errorMessages={['This field is required', 'Can only contain letters and numbers', 'Must be 4 to 32 characters']}
                         onChange = {props.onChangeUsername}
                         value={props.username}
                     />
                     {/* Password Field and will contain password type */}
-                    <TextField
+                    <TextValidator
                         variant="outlined"
                         margin="normal"
                         required
@@ -180,19 +194,21 @@ export default function Component(props) {
                         type="password"
                         id="password"
                         autoComplete="current-password"
+                        validators={['required', 'matchRegexp:^.{8,32}$', 'matchRegexp:^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[]:;<>,.?/~_+-=|).{8,32}$']}
+                        errorMessages={['This field is required', 'Must be 8 to 32 characters', 'Minimum of one uppercase, lowercase, number, and symbol']}
                         onChange = {props.onChangePassword}
                         value={props.password}
                     />
+                    <TextField/>
                     <Button
                         type="submit"
                         fullWidth
                         variant="contained"
                         color="primary"
-                        onClick={handleSubmit}
                     >
                         Edit Information
                     </Button>
-                </form>
+                </ValidatorForm>
             </div>
         </Container>
     )

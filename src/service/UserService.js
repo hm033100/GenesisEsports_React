@@ -78,6 +78,12 @@ class UserService {
         return response.data;
     }
 
+    async getAllUsers(){
+
+        const response = await axios.get("http://localhost:8080/users");
+        return response.data;
+    }
+
 }
 
 export default new UserService();

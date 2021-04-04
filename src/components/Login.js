@@ -16,6 +16,7 @@ import service from './../service/UserService';
 import { useHistory } from 'react-router-dom';
 import React from 'react';
 import Cookies from 'universal-cookie';
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
 //Styles that are used in the login page
 const useStyles = makeStyles((theme) => ({
@@ -59,10 +60,10 @@ export default function Component(props) {
 
     cookies.set('Id', status._id, { path: '/' })
     cookies.set('username', status.username, { path: '/' })
-    cookies.set('password', status.password,{ path: '/' })
-    
+    cookies.set('password', status.password, { path: '/' })
+
     //if there is a result go to homepage
-    if (status !== ""){
+    if (status !== "") {
       history.push("/HomePage")
     } else {
       alert("Failed to Login/Register!")
@@ -76,8 +77,8 @@ export default function Component(props) {
         <Typography component="h1" variant="h5">
           Login
         </Typography>
-        <form className={classes.form} noValidate>
-          <TextField
+        <ValidatorForm onSubmit={handleSubmit} onError={errors => console.log(errors)}>
+          <TextValidator
             variant="outlined"
             margin="normal"
             required
@@ -87,10 +88,12 @@ export default function Component(props) {
             name="username_login"
             autoComplete="username"
             autoFocus
+            validators={['required']}
+            errorMessages={['This field is required']}
             onChange={props.onChangeUsernameLogin}
             value={props.username_login}
           />
-          <TextField
+          <TextValidator
             variant="outlined"
             margin="normal"
             required
@@ -100,19 +103,21 @@ export default function Component(props) {
             name="password_login"
             type="password"
             autoComplete="current-password"
+            validators={['required']}
+            errorMessages={['This field is required']}
             onChange={props.onChangePasswordLogin}
             value={props.password_login}
           />
+          <TextField/>
           <Button
             type="submit"
             fullWidth
             variant="contained"
             color="primary"
-            onClick={handleSubmit}
           >
             Login
           </Button>
-        </form>
+        </ValidatorForm>
       </div>
     </Container>
   );

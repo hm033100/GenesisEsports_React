@@ -14,6 +14,10 @@ import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
 import UserInfo from './pages/UserInfo';
 import TeamInfo from './pages/TeamInfo';
+import AdminPage from './pages/AdminPage';
+import CreateTeam from './pages/CreateTeam';
+import Matches from './pages/Matches';
+import CreateLeague from './pages/CreateLeague';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 /**
@@ -31,7 +35,7 @@ export default function App() {
           <Switch>
           <Route exact path="/">
               <Navbar/>
-              <HomePage/>
+              <LoginRegister/>
             </Route>
             <Route exact path="/HomePage">
               <Navbar/>
@@ -56,6 +60,22 @@ export default function App() {
             <Route exact path="/TeamInfo">
               <Navbar/>
               <TeamInfo/>
+            </Route>
+            <Route exact path="/CreateTeam">
+              <Navbar/>
+              <CreateTeam/>
+            </Route>
+            <Route exact path="/AdminPage">
+              <Navbar/>
+              <AdminPage/>
+            </Route>
+            <Route exact path="/CreateLeague">
+              <Navbar/>
+              <CreateLeague/>
+            </Route>
+            <Route exact path="/Matches">
+              <Navbar/>
+              <Matches/>
             </Route>
           </Switch>
       </Router>
