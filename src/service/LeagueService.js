@@ -3,7 +3,7 @@ import axios from 'axios';
 class LeagueService {
     async getAllLeagues(){
 
-        const response = await axios.get("http://localhost:8080/leagues");
+        const response = await axios.get("https://genesis-esports.herokuapp.com/leagues");
         return response.data;
     }
 
@@ -15,7 +15,7 @@ class LeagueService {
             }
         };
 
-        const response = await axios.post("http://localhost:8080/leagues/id", json, axiosConfig);
+        const response = await axios.post("https://genesis-esports.herokuapp.com/leagues/id", json, axiosConfig);
         return response.data;
     }
 
@@ -28,7 +28,7 @@ class LeagueService {
             }
         };
 
-        const response = await axios.post("http://localhost:8080/leagues/save", json, axiosConfig);
+        const response = await axios.post("https://genesis-esports.herokuapp.com/leagues/save", json, axiosConfig);
         return response.data;
     }
 
@@ -41,7 +41,7 @@ class LeagueService {
             }
         };
 
-        const response = await axios.post("http://localhost:8080/leagues/delete", json, axiosConfig);
+        const response = await axios.post("https://genesis-esports.herokuapp.com/leagues/delete", json, axiosConfig);
         return response.data;
     }
 }
