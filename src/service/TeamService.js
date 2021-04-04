@@ -3,7 +3,7 @@ import axios from 'axios';
 class TeamService {
     async getAllTeams(){
 
-        const response = await axios.get("http://localhost:8080/teams");
+        const response = await axios.get("https://genesis-esports.herokuapp.com/teams");
         return response.data;
     }
 
@@ -15,7 +15,7 @@ class TeamService {
             }
         };
 
-        const response = await axios.post("http://localhost:8080/teams/id", json, axiosConfig);
+        const response = await axios.post("https://genesis-esports.herokuapp.com/teams/id", json, axiosConfig);
         return response.data;
     }
 
@@ -28,7 +28,7 @@ class TeamService {
             }
         };
 
-        const response = await axios.post("http://localhost:8080/teams/save", json, axiosConfig);
+        const response = await axios.post("https://genesis-esports.herokuapp.com/teams/save", json, axiosConfig);
         return response.data;
     }
 
@@ -41,7 +41,7 @@ class TeamService {
             }
         };
 
-        const response = await axios.post("http://localhost:8080/teams/delete", json, axiosConfig);
+        const response = await axios.post("https://genesis-esports.herokuapp.com/teams/delete", json, axiosConfig);
         return response.data;
     }
 }
