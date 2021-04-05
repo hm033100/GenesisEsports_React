@@ -20,6 +20,7 @@ import service from './../service/UserService';
 import teamService from './../service/TeamService';
 import { Grid } from '@material-ui/core';
 import Tooltip from '@material-ui/core/Tooltip';
+import matchService from './../service/MatchService';
 
 
 
@@ -30,6 +31,15 @@ const useStyles = makeStyles({
         align: 'center',
     },
     card: {
+        width: "33%",
+        height: 300,
+        paddingRight: 100,
+        marginTop: 50,
+        margnRight: 50,
+        marginLeft: 50,
+        backgroundColor: "#3f50b5"
+    },
+    matchCard: {
         minWidth: 100,
         maxWidth: 700,
         height: "70%",
@@ -54,7 +64,8 @@ const useStyles = makeStyles({
         height: 500,
         marginTop: 50,
         margnRight: 500,
-        marginLeft: 50,
+        marginLeft: 150,
+        alignContent: "center",
         backgroundColor: "#3f50b5"
     },
     bullet: {
@@ -128,6 +139,7 @@ export default function Component(props) {
     //states used throughout the website
     const [teamMembers, setTeamMembers] = useState([]);
     const [teamOwner, setTeamOwner] = useState(false);
+    const [teamMatches, setTeamMatches] = useState([]);
 
     //declear variables that are used for logic
     let classes = useStyles();
@@ -299,6 +311,16 @@ export default function Component(props) {
         //grab all the users from the database
         let users = await service.getAllUsers();
 
+        //grab all the matches from the database
+        let matches = await matchService.getAllMatches();
+
+        //loop through the matches and grab the matches that has this teams id
+        const matchesArray = matches.filter((match) => {
+            if (match.firstTeam._id === props.team._id || match.secondTeam._id === props.team._id) {
+                return match;
+            }
+        })
+
         //filter through the user 
         const userArray = users.filter((user) => {
             //store in user array the users with team id of the team
@@ -317,6 +339,7 @@ export default function Component(props) {
         }
         //store team members in the state variable
         setTeamMembers(userArray)
+        setTeamMatches(matchesArray)
     };
 
     /**
@@ -326,6 +349,8 @@ export default function Component(props) {
     useEffect(() => {
         fetchData();
     }, []);
+
+    console.log("Matches", teamMatches)
 
     //variable of buttons that are going to be rendered in the teams
     let buttons;
@@ -351,30 +376,56 @@ export default function Component(props) {
 
     return (
         <div>
-            <Card className={classes.card} >
-                <Typography align="center" variant="h4" style={{ marginTop: 40, color: "#FFFFFF" }}>
-                    This is your team information, {props.user.firstName}
-                    <br></br>
-                </Typography>
-                <Typography variant="h5" style={{ marginTop: 10, marginBottom: 40, color: "#FFFFFF", paddingLeft: 100 }}>
-                    Team Name: {props.team.teamName}
-                    <br></br>
+            <div style={{ display: "flex", paddingRight: 50 }}>
+                <Card className={classes.card} >
+                    <Typography align="center" variant="h4" style={{ marginTop: 40, color: "#FFFFFF" }}>
+                        This is your team information, {props.user.firstName}
+                        <br></br>
+                    </Typography>
+                    <Typography variant="h5" style={{ marginTop: 10, marginBottom: 40, color: "#FFFFFF", paddingLeft: 100 }}>
+                        Team Name: {props.team.teamName}
+                        <br></br>
                         Clubtag: {props.team.clubTag}
-                    <br></br>
+                        <br></br>
                         Losses: {losses}
-                    <br></br>
+                        <br></br>
                         Wins: {wins}
+                    </Typography>
+                </Card>
+                <Card className={classes.card}>
+                    {teamMatches.length !== 0 ? (
+                        <div>
+                            <Typography align="center" variant="h4" style={{ marginTop: 40, color: "#FFFFFF" }}>
+                                Upcoming Match
+                                <br></br>
+                            </Typography>
+                            <Typography variant="h3" style={{ justifyContent: "center", marginTop: 40, textAlign: "center", color: "#FFFFFF" }}>
+                                {teamMatches[0]?.firstTeam?.teamName} vs {teamMatches[0]?.secondTeam?.teamName}
+                            </Typography>
+                        </div>
+                    ) : (
+                        <div>
+                            <Typography align="center" variant="h4" style={{ marginTop: 40, color: "#FFFFFF" }}>
+                                    Upcoming Match
+                                    <br></br>
+                                </Typography>
+                                <  Typography variant="h3" style={{ justifyContent: "center", marginTop: 40, textAlign: "center", color: "#FFFFFF" }}>
+                                No Matches Coming Up
+                            </Typography>
+                        </div>
+                )}
+
+                </Card>
+                <Card className={classes.card} >
+                    <Typography align="center" variant="h4" style={{ marginTop: 40, color: "#FFFFFF" }} >
+                        Team Win Ratio
                 </Typography>
-            </Card>
-            <Card className={classes.card} >
-                <Typography align="center" variant="h4" style={{ marginTop: 40, color: "#FFFFFF" }} >
-                    Team Win Ratio
-                </Typography>
-                <ProgressBar
-                    bgcolor="#FFFFFF"
-                    completed={percentage(wins, total)}
-                />
-            </Card>
+                    <ProgressBar
+                        bgcolor="#FFFFFF"
+                        completed={percentage(wins, total)}
+                    />
+                </Card>
+            </div>
             <Card className={classes.membersCard} >
                 <Tooltip title={<h1 style={{ color: "white" }}>Firstname | GamerTag</h1>}>
                     <Typography align="center" variant="h4" style={{ marginTop: 40, color: "#FFFFFF" }} >
