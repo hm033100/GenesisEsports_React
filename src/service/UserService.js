@@ -25,7 +25,7 @@ class UserService {
             }
         };
 
-        const response = await axios.post("https://genesis-esports.herokuapp.com/users/validate", json, axiosConfig);
+        const response = await axios.post("http://genesis-esports.herokuapp.com/users/validate", json, axiosConfig);
         return response.data;
     }
     /**
@@ -41,7 +41,7 @@ class UserService {
             }
         };
 
-        const response = await axios.post("https://genesis-esports.herokuapp.com/users/save", json, axiosConfig);
+        const response = await axios.post("http://genesis-esports.herokuapp.com/users/save", json, axiosConfig);
         return response.data;
     }
 
@@ -57,7 +57,7 @@ class UserService {
             }
         };
 
-        const response = await axios.post("https://genesis-esports.herokuapp.com/users/id", json, axiosConfig);
+        const response = await axios.post("http://genesis-esports.herokuapp.com/users/id", json, axiosConfig);
         return response.data;
     }
 
@@ -74,13 +74,13 @@ class UserService {
             }
         };
 
-        const response = await axios.post("https://genesis-esports.herokuapp.com/users/save", json, axiosConfig);
+        const response = await axios.post("http://genesis-esports.herokuapp.com/users/save", json, axiosConfig);
         return response.data;
     }
 
     async getAllUsers(){
 
-        const response = await axios.get("https://genesis-esports.herokuapp.com/users");
+        const response = await axios.get("http://genesis-esports.herokuapp.com/users");
         return response.data;
     }
 
