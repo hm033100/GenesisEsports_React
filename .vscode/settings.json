@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/49e40bb4-4f71-41cd-8741-923e212cb7de/resourceGroups/genesisesports/providers/Microsoft.Web/sites/GenesisEsports",
+    "appService.deploySubpath": "."
+}
