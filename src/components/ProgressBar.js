@@ -1,5 +1,15 @@
+/*  Hermes Mimini
+ *  CST-452: Professor Mark Reha
+ *  Version 1.0
+ *  Sprint 2: 02/07/2021
+ * 
+ * This is a component used to display a team Win Rate in TeamInfo.js
+ */
+
+//Import React
 import React from "react";
 
+//Create a Porgressbar and set all the CSS for it
 const ProgressBar = (props) => {
     const { bgcolor, completed } = props;
 
@@ -25,6 +35,7 @@ const ProgressBar = (props) => {
         fontWeight: 'bold'
     }
 
+    //Return the HTML to the app
     return (
         <div style={containerStyles}>
             <div style={fillerStyles}>

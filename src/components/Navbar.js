@@ -2,6 +2,8 @@
  *  CST-452: Professor Mark Reha
  *  Version 1.0
  *  Sprint 2: 02/07/2021
+ * 
+ * This file is the navbar that is used in the app
  */
 
 //necessary imports for the project
@@ -29,38 +31,56 @@ const useStyles = makeStyles((theme) => ({
 
 
 
+
 /**
  * This function returns the Navbar to the page. 
+ * @returns - HTML Page
  */
 export default function ButtonAppBar() {
+
+  //Initialize variables that will be used in this page
   const classes = useStyles();
   const [isLoading, setLoading] = useState();
   const [user, setUser] = useState();
 
+  //Initialize the cookies for the page
   const cookies = new Cookies();
   const _id = cookies.get('Id');
 
+  /**
+     * fetchData() - Async call that will grab all the necessary data for this page
+     */
   const fetchData = async () => {
+    //Grab the ID from the session and convert it to json
     let json = JSON.stringify({
       "_id": _id,
     });
+
     try {
+      //Page is loading while grabbing the data
       setLoading(true)
+      //use the json data in the user service to get the user by id
+      //store it in the user global variable
       const user = await userService.getUser(json)
       setUser(user)
     } catch (e) {
+      //If there are errors log them
       console.log(e)
     } finally {
+      //set loading to false so the page is rendered
       setLoading(false)
     }
   }
 
+  //Use effect will render the data
   useEffect(() => {
     fetchData();
   }, []);
 
+  //Create a navabar variable to store the different navbars based on the users session
   let navbar;
 
+  //if the navbar is in login register return the LoginRegister Navbar
   if (window.location.pathname === "/LoginRegister") {
     navbar =
       <AppBar position="static">
@@ -70,6 +90,7 @@ export default function ButtonAppBar() {
           </Typography>
         </Toolbar>
       </AppBar>
+  //If the user id is the Adming user id return the navbar with the admin permissions
   } else if (user?._id === "6068a18c4ad5801e4d72ee21") {
     navbar =
     <AppBar position="static">
@@ -84,6 +105,7 @@ export default function ButtonAppBar() {
         <Button href="/LoginRegister" color="inherit">Logout</Button>
       </Toolbar>
     </AppBar>
+  //Else return normal user navbar
   } else {
     navbar =
       <AppBar position="static">
@@ -101,6 +123,7 @@ export default function ButtonAppBar() {
 
   
 
+  //Return the HTML to the app
   return (
     <div>
       {isLoading ? (

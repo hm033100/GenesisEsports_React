@@ -1,3 +1,12 @@
+/*  Hermes Mimini
+ *  CST-452: Professor Mark Reha
+ *  Version 1.0
+ *  Sprint 2: 02/07/2021
+ * 
+ * This Page will be used to Create a team as well as contain logic for the teams
+ */
+
+//Import all the necessary components for the page 
 import React, { useState, useEffect } from "react";
 import userService from "./../service/UserService";
 import Cookies from 'universal-cookie';
@@ -24,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: theme.palette.secondary.main,
     },
     form: {
-        width: '100%', // Fix IE 11 issue.
+        width: '100%', 
         marginTop: theme.spacing(1),
     },
     submit: {
@@ -32,8 +41,14 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+/**
+ * The main function that will export the rendered HTML at the bottom
+ * @param {} props - Variables that were passed to the page
+ * @returns - HTML Page
+ */
 export default function Component(props) {
 
+    //Define all the constants that will be used throghout the page
     const [user, setUser] = useState();
     const [isLoading, setLoading] = useState();
     const cookies = new Cookies();
@@ -43,6 +58,7 @@ export default function Component(props) {
     const [clubTag, setClubTag] = useState('');
     let history = useHistory();
 
+    //On change variables so that it will render when it is detected
     const onChangeTeamName = (event) => {
         setTeamName(event.target.value);
     }
@@ -51,24 +67,40 @@ export default function Component(props) {
         setClubTag(event.target.value);
     }
 
+    /**
+     * FetchData will grab the user from the database
+     */
     const fetchData = async () => {
+        //Conver the user ID to json from the session
         let json = JSON.stringify({
             "_id": _id,
         });
         try {
+            //set loading to true so that the information is rendered
             setLoading(true)
+            //grab the user from the database and store it to the user constant
             const user = await userService.getUser(json)
+            //set the user to the global constant
             setUser(user)
         } catch (e) {
+            //if there are any errors log them
             console.log(e)
         } finally {
+            //set loading to false so that the page is rendered
             setLoading(false)
         }
     }
 
+    /**
+     * This function will create a team and will set 
+     * the current user as the team owner by setting the team_id and owner id
+     * @param {*} event 
+     */
     const handleSubmit = async (event) => {
+        //prevent rendering 
         event.preventDefault();
 
+        //Convert the team information to json 
         let json = JSON.stringify({
             "clubTag": clubTag,
             "ownerID": _id,
@@ -77,8 +109,11 @@ export default function Component(props) {
             "teamName": teamName
         });
 
+        //use the service to add the team to the database
         let status = await teamService.createTeam(json);
 
+        //edit the user information so that the team ID is assigned
+        //convert the information to JSON
         let jsonUser = JSON.stringify({
             "_id": _id,
             "team_id": status._id,
@@ -91,16 +126,20 @@ export default function Component(props) {
             "password": user.password
         });
 
+        //save the information to the database
         let statusUser = await userService.editUser(jsonUser);
 
 
+        //if successful push to TeamInformation page
         if (statusUser !== "") {
             history.push("/TeamInfo")
         } else {
+            //Else Display error
             alert("Failed to Create Team")
         }
     }
 
+    //Method that will render the information for the page
     useEffect(() => {
         fetchData();
     }, []);

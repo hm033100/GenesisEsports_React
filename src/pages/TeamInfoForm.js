@@ -1,3 +1,15 @@
+/*  Hermes Mimini
+ *  CST-452: Professor Mark Reha
+ *  Version 1.0
+ *  Sprint 2: 02/07/2021
+ * 
+ * This page will display the team information to the user 
+ * based on what team ID that they have, using the map react function
+ * the members of the team will also be shown. There is logical code to
+ * display team information. 
+ */
+
+//Import all the necessary components for the page 
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
@@ -9,16 +21,7 @@ import teamService from './../service/TeamService';
 import { Grid } from '@material-ui/core';
 import Tooltip from '@material-ui/core/Tooltip';
 
-function percentage(partialValue, totalValue) {
-    var num;
-    if (partialValue === 0 && totalValue === 0) {
-        num = 0
-    } else {
-        num = (100 * partialValue) / totalValue;
-        num = Math.round(num);
-    }
-    return num;
-}
+
 
 //Styles needed for the page
 const useStyles = makeStyles({
@@ -86,21 +89,60 @@ const useStyles = makeStyles({
     noMaxWidth: {
         maxWidth: 'none',
     },
-   
+
 });
 
+/**
+ * This function will take in the total games played and games won
+ * for the team and use math logic to convert to a percentage that is displayed
+ * on a bar
+ * @param {} partialValue - The games won for the team
+ * @param {*} totalValue - The total games played
+ * @returns - Integer - Percentage 
+ */
+function percentage(partialValue, totalValue) {
+    //create a num variable 
+    var num;
+
+    //if toatal agmes and games won are 0 num is 0
+    //NOTE - this logic is to avoid spring errors
+    if (partialValue === 0 && totalValue === 0) {
+        num = 0
+    } else {
+        //else multiply and divide to get the percentage
+        num = (100 * partialValue) / totalValue;
+        //round
+        num = Math.round(num);
+    }
+    return num;
+}
+
+/**
+ * The function that takes the props of a user and team and 
+ * wil display. 
+ * @param {*} props - User/Team
+ * @returns 
+ */
 export default function Component(props) {
-    let classes = useStyles();
+
+    //states used throughout the website
     const [teamMembers, setTeamMembers] = useState([]);
     const [teamOwner, setTeamOwner] = useState(false);
 
+    //declear variables that are used for logic
+    let classes = useStyles();
     var wins = parseInt(props.team.teamWins);
     var losses = parseInt(props.team.teamLosses);
     var total = wins + losses;
 
+    /**
+     * This function is for when a user wants to leave the team that they are in
+     * and it uses the team id sent that will be removed using a service call
+     * @param {} teamId - Users Team ID
+     */
     const leaveTeam = async (teamId) => {
-        console.log("TeamID", teamId);
 
+        //convert the user information to json and removce the team id
         let json = JSON.stringify({
             "_id": props.user._id,
             "team_id": "",
@@ -113,20 +155,27 @@ export default function Component(props) {
             "password": props.user.password
         });
 
+        //Call the service to edit the user and save to the database
         let status = await service.editUser(json);
 
-        console.log("Status", status)
-
+        //If successful refresh the page
         if (status !== "") {
             window.location.reload();
         } else {
+            //else alert the user for the error
             alert("Failed to Leave to Team!")
         }
 
     };
 
+    /**
+     * This function is for when a user leaves a team and the user is the owner
+     * the owner id of the team is going to be set to a user in the team
+     * @param {} teamId 
+     */
     const ownerLeaveTeam = async (teamId) => {
 
+        //convert the user information to json and disinclude the team id
         let json = JSON.stringify({
             "_id": props.user._id,
             "team_id": "",
@@ -139,48 +188,71 @@ export default function Component(props) {
             "password": props.user.password
         });
 
+        //run the service to make changes in the database
         let status = await service.editUser(json);
 
+        //grab all the users from the database
         let users = await service.getAllUsers();
+        //filter through the users 
         const userArray = users.filter((user) => {
+            //if the users team id is equal to the team id
             if (user.team_id === props.team._id) {
+                //return that user which will be stored in the users array
                 return user;
             }
         })
 
+        //define a variable where the next owner id is stored
         let nextOwnerID;
 
-        for (let i = 0; i < userArray.length; i++){
-            if(userArray[i].team_id === props.team._id){
+        //loop through the user array
+        for (let i = 0; i < userArray.length; i++) {
+            //if the users team id is equal to the team id
+            if (userArray[i].team_id === props.team._id) {
+                //set the user as the next owner
                 nextOwnerID = userArray[i]._id;
+                //break
                 break;
             }
         }
 
+        //convert the team information to json with the new team owner id
         let teamJson = JSON.stringify({
-            "_id" : props.team._id,
-            "ownerID" : nextOwnerID,
-            "teamName" : props.team.teamName,
-            "clubTag" : props.team.clubTag,
-            "teamWins" : props.team.teamWins,
-            "teamLosses" : props.team.teamLosses
+            "_id": props.team._id,
+            "ownerID": nextOwnerID,
+            "teamName": props.team.teamName,
+            "clubTag": props.team.clubTag,
+            "teamWins": props.team.teamWins,
+            "teamLosses": props.team.teamLosses
         })
 
+        //store the team to the database by using the service
         teamService.createTeam(teamJson);
 
+        //if there are no errors refresh the page
         if (status !== "") {
             window.location.reload();
         } else {
+            //else display the error to the user
             alert("Failed to Leave to Team!")
         }
 
     };
 
+    /**
+     * This function will delete the team from the database 
+     * and remove all the users from the team
+     * @param {} teamId 
+     */
     const deleteTeam = async (teamId) => {
 
+        //status which is the response that is used below
         let status;
 
-        for (let i = 0; i < teamMembers.length; i++){
+        //loop through the team members 
+        for (let i = 0; i < teamMembers.length; i++) {
+
+            //convert all the users to json while looping and remove the team id
             let json = JSON.stringify({
                 "_id": teamMembers[i]._id,
                 "team_id": "",
@@ -193,68 +265,97 @@ export default function Component(props) {
                 "password": teamMembers[i].password
             });
 
+            //call the service to change all the users in the database
             status = await service.editUser(json);
         }
 
+        //convert the team id to json
         let json = JSON.stringify({
-            "_id" : props.team._id,
+            "_id": props.team._id,
         })
 
+        //using the json team id delete the team
         await teamService.deleteTeam(json);
-        
 
+
+        //if there are no errors 
         if (status !== "") {
+            //refresh the page
             window.location.reload();
         } else {
+            //else show the errors
             alert("Failed to Delete Team!")
         }
 
     };
 
+    /**
+    * Fecth data will grab the users from the database and store them in an array
+    * it will determine the team members as well as alert the user if they are the owner
+    * of the team 
+    * 
+    */
     const fetchData = async () => {
+        //grab all the users from the database
         let users = await service.getAllUsers();
+
+        //filter through the user 
         const userArray = users.filter((user) => {
+            //store in user array the users with team id of the team
             if (user.team_id === props.team._id) {
+                //store user
                 return user;
             }
         })
-        
-        if (props.user._id === props.team.ownerID){
+
+        //if the current user has team id equal to the team owner id
+        if (props.user._id === props.team.ownerID) {
+            //set team owner as true
             setTeamOwner(true)
+            //alert the user that they are team owner
             alert("You are team owner!")
         }
+        //store team members in the state variable
         setTeamMembers(userArray)
     };
 
+    /**
+     * This method will call the asynchronous call in order for the page to render after
+     * the data is recieved fromt the API Call
+     */
     useEffect(() => {
         fetchData();
     }, []);
 
+    //variable of buttons that are going to be rendered in the teams
     let buttons;
-    if (teamOwner === false){
+    //if the user is not an owner
+    if (teamOwner === false) {
+        //set the button to be a regular button
         buttons =
-        <Button onClick={() => leaveTeam()} size="large" variant="contained" color="primary" className={classes.button}>
-            Leave Team
+            <Button onClick={() => leaveTeam()} size="large" variant="contained" color="primary" className={classes.button}>
+                Leave Team
         </Button>
     } else {
-        buttons = 
-        <div>
-            <Button onClick={() => ownerLeaveTeam()} size="large" variant="contained" color="primary" className={classes.button}>
-                Leave Team
+        //else add on top another button called delete team for the team owner
+        buttons =
+            <div>
+                <Button onClick={() => ownerLeaveTeam()} size="large" variant="contained" color="primary" className={classes.button}>
+                    Leave Team
             </Button>
-            <Button onClick={() => deleteTeam()} size="large" variant="contained" color="primary" className={classes.button}>
-                Delete Team
+                <Button onClick={() => deleteTeam()} size="large" variant="contained" color="primary" className={classes.button}>
+                    Delete Team
             </Button>
-        </div>
+            </div>
     }
 
     return (
         <div>
             <Card className={classes.card} >
-                    <Typography align="center" variant="h4" style={{ marginTop: 40, color: "#FFFFFF" }}>
-                        This is your team information, {props.user.firstName}
-                        <br></br>
-                    </Typography>
+                <Typography align="center" variant="h4" style={{ marginTop: 40, color: "#FFFFFF" }}>
+                    This is your team information, {props.user.firstName}
+                    <br></br>
+                </Typography>
                 <Typography variant="h5" style={{ marginTop: 10, marginBottom: 40, color: "#FFFFFF", paddingLeft: 100 }}>
                     Team Name: {props.team.teamName}
                     <br></br>
@@ -280,12 +381,12 @@ export default function Component(props) {
                         Team Members
                     </Typography>
                 </Tooltip>
-                <Grid container justify = "flex-start" direction="row">     
+                <Grid container justify="flex-start" direction="row">
                     {teamMembers.map(member => (
                         <Grid item>
-                            <Card className={classes.userCard} >              
+                            <Card className={classes.userCard} >
                                 <Typography align="center" variant="h4" style={{ color: "#FFFFFF" }} >
-                                    {member.firstName} | {member.username} 
+                                    {member.firstName} | {member.username}
                                 </Typography>
                             </Card>
                         </Grid>

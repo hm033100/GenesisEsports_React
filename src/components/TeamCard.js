@@ -1,3 +1,12 @@
+/*  Hermes Mimini
+ *  CST-452: Professor Mark Reha
+ *  Version 1.0
+ *  Sprint 2: 02/07/2021
+ * 
+ * This component is used to display Team information uniquely
+ */
+
+//Complete all necessary imports for the page
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -6,6 +15,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
+//create the styles use and store into useStyles
 const useStyles = makeStyles({
   root: {
     minWidth: 275,
@@ -23,6 +33,11 @@ const useStyles = makeStyles({
   },
 });
 
+/**
+ * 
+ * @param {*} param0 
+ * @returns 
+ */
 export default function SimpleCard({teamName, clubTag, teamWins, teamLosses}) {
   const classes = useStyles();
 

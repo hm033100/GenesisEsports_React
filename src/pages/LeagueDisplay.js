@@ -1,3 +1,13 @@
+/*  Hermes Mimini
+ *  CST-452: Professor Mark Reha
+ *  Version 1.0
+ *  Sprint 2: 02/07/2021
+ * 
+ * This Page will display the league as well as hold basic functionality for the League Interaction
+ * with the user
+ */
+
+//Import all the necessary components for the page 
 import Cookies from 'universal-cookie';
 import service from './../service/UserService';
 import teamService from './../service/TeamService';
@@ -16,6 +26,7 @@ import HomePage from './HomePage';
 import UserService from './../service/UserService';
 import MatchService from '../service/MatchService';
 
+//Define the CSS styles that are going to be used and store in use styles
 const useStyles = makeStyles({
     root: {
         minWidth: 275,
@@ -65,31 +76,51 @@ const useStyles = makeStyles({
 const cookies = new Cookies();
 const _id = cookies.get('Id');
 
+/**
+ * This is the function that will return the page 
+ * as well as take in props that will have logic 
+ * coded in to display the league
+ * @param {*} props - Variables
+ * @returns - HTML Page
+ */
 export default function Component(props) {
 
+    //Decleare all the constants necessary for the page
     const [isLoading, setLoading] = useState();
     const [teams, setTeams] = useState([]);
     const [teamMatches, setTeamMatches] = useState([]);
     const classes = useStyles();
     const history = useHistory();
 
+    //set up booleans that are going to be used to show different information 
     let inLeague = false;
     let isOwner = false;
 
+    /**
+     * Fetch data will grab teams, matches as well as filter through the
+     * matches to only assign th e ones respecitve to the user
+     */
     const fetchData = async () => {
+        //grab the teams
         let teams = await teamService.getAllTeams();
+        //grab the matches
         let matches = await MatchService.getAllMatches();
+
+        //set up a temporary array to store the teams
         let teamArray = [];
 
+        //set up a temporary array to filter out the matches that correspond to the user
         const matchesArray = matches.filter((match) => {
             if (match?.firstTeam._id === props?.user.team_id || match?.secondTeam._id === props?.user.team_id) {
                 return match;
             }
         })
 
+        //set the matches to the global array
         setTeamMatches(matchesArray)
 
-
+        //filter through the teams and store in the temporary array only
+        //the teams that correspond to the users league
         for (let i = 0; i < props.league.teamsId.length; i++) {
             for (let j = 0; j < teams.length; j++) {
                 if (teams[j]._id === props.league.teamsId[i]) {
@@ -98,32 +129,53 @@ export default function Component(props) {
             }
         }
 
+        //set the teams to the global variable
         setTeams(teamArray)
     }
 
+    
+    /**
+     * This function will display the team leader to the user 
+     * @param {*} team - The team that the leader wants to be seen
+     */
     const showTeamLeader = async (team) => {
+
+        //convert the owner ID of the team to JSON
         let json = JSON.stringify({
             "_id": team.ownerID
         })
 
+        //Grab the user from the database by using the user service
         let status = await service.getUser(json)
 
+        //if it works display to the user the team leader information
         if (status !== "") {
             alert("Team Leader is Firstname: " + status.firstName + " ,and Username: " + status.username)
         }
     }
 
+    /**
+     * This function will remove a team from the leage as well
+     * as fix the connections that are left behind with that event
+     * @param {} league - The leage that is going to be left 
+     */
     const leaveLeague = async (league) => {
+        //set the teams array as the props array that corresponds to the teamsId array
         let teamsArray = props.league.teamsId
 
+        //make a new array that is going to hold the new teamsId
         let newTeamsArray = [];
 
+        //Loop through the teamsArray
         for (let i = 0; i < teamsArray.length; i++) {
+            //if the teamsArray does not equal the current user team id
             if (teamsArray[i] !== props.user.team_id) {
+                //push it to the new array
                 newTeamsArray?.push(teamsArray[i])
             }
         }
 
+        //convert the league information to JSON with the new teams array
         let json = JSON.stringify({
             "_id": props.league._id,
             "leagueName": props.league.leagueName,
@@ -132,11 +184,12 @@ export default function Component(props) {
             "teamsId": newTeamsArray
         })
 
+        //if the league is locked the team is not allowed to leave
         if (props.league.isLocked) {
             alert("Cannot Leave League, the league has started!")
         } else {
+            //edit the league with the new array and reload the page
             let status = await leagueService.createLeague(json)
-
             if (status !== "") {
                 window.location.reload();
             } else {

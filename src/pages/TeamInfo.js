@@ -1,3 +1,14 @@
+/*  Hermes Mimini
+ *  CST-452: Professor Mark Reha
+ *  Version 1.0
+ *  Sprint 2: 02/07/2021
+ * 
+ * This Page will display if the user is not part of the team by using 
+ * respective logic to that and will provide the page to create a team if the 
+ * user wants to.
+ */
+
+//Import all the necessary components for the page 
 import Cookies from 'universal-cookie';
 import service from './../service/UserService';
 import teamService from './../service/TeamService';
@@ -12,7 +23,7 @@ import { Grid } from '@material-ui/core';
 import TeamInfoForm from './TeamInfoForm';
 import { useHistory } from "react-router-dom";
 
-
+//Define the CSS styles that are going to be used and store in use styles
 const useStyles = makeStyles({
     root: {
         minWidth: 275,
@@ -65,8 +76,14 @@ const useStyles = makeStyles({
 const cookies = new Cookies();
 const _id = cookies.get('Id');
 
-
+/**
+ * 
+ * @param {*} props 
+ * @returns 
+ */
 export default function Component(props) {
+
+    //define variables that are used for design and routing
     const classes = useStyles();
     const history = useHistory();
 
@@ -81,37 +98,63 @@ export default function Component(props) {
       using a service call.
     */
     const fetchData = async () => {
+
+        //convert the session user id to json
         let json = JSON.stringify({
             "_id": _id,
         });
         try {
+            //set loading to true so that the infromation is rendered first
             setLoading(true)
+
+            //store the user in a temporary constant
             const user = await service.getUser(json)
+
+            //store the user in the global state
             setData(user)
+
+            //grab all the teams from the database
             const fetchTeams = await teamService.getAllTeams()
+
+            //store the teams in the state variable
             setTeams(fetchTeams)
 
+            //if the users team id is not empty
             if (user.team_id !== "") {
+                //convert the users team id to json
                 let teamJson = JSON.stringify({
                     "_id": user.team_id
                 });
+
+                //using the teams id grab the team by id
                 const fetchTeam = await teamService.getTeam(teamJson)
+                //set the team to the state variable
                 setUserTeam(fetchTeam)
             }
         } catch (e) {
+            //display the errors
             console.log(e)
         } finally {
+            //set the loading to false so that the page renders
             setLoading(false)
         }
     }
 
+    /**
+     * this function will redirect the user to the create team 
+     * page if they choose to make a team
+     */
     const createTeamRoute = () => {
         history.push("/CreateTeam");
     }
 
+    /**
+     * This function will let the user join a team that is owned by another user
+     * it takes in the team id of the team that they want to join
+     * @param {*} teamId 
+     */
     const joinTeam = async (teamId) => {
-        console.log("TeamID", teamId);
-
+        //convert the user info to json and add in the team id that the user wants to join
         let json = JSON.stringify({
             "_id": _id,
             "team_id": teamId,
@@ -124,18 +167,23 @@ export default function Component(props) {
             "password": data.password
         });
 
+        //edt the user by calling the service
         let status = await service.editUser(json);
 
-        console.log("Status", status)
-
+        //if there are no issues refresh the page
         if (status !== "") {
             window.location.reload();
         } else {
+            //else display error to user
             alert("Failed to Add to Team!")
         }
 
     };
 
+    /**
+     * This method will call the asynchronous call in order for the page to render after
+     * the data is recieved fromt the API Call
+     */
     useEffect(() => {
         fetchData();
     }, []);

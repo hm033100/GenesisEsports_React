@@ -1,3 +1,16 @@
+/*  Hermes Mimini
+ *  CST-452: Professor Mark Reha
+ *  Version 4.0
+ *  Sprint 4: 04/04/2021
+ *
+ * 
+ * This is the form class for League where the admin uses to create the league.
+ */
+
+
+/**
+ * All the imports required for this file
+ */
 import React, { useState, useEffect } from "react";
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -29,23 +42,43 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+/**
+ * This is the function that initializes the page
+ * @param {*} props - Variables that come from the page that calls this component
+ * @returns - HTML Page
+ */
 export default function Component(props) {
+
+    //Initialize variables that will be used in this page
     const classes = useStyles();
     const [leagues, setLeagues] = useState([]);
     const [leagueName, setLeagueName] = useState();
 
+    //On change constants to re-render the changes
     const onChangeLeagueName = (event) => {
         setLeagueName(event.target.value);
     }
 
+    /**
+     * fetchData() - Async call that will grab all the necessary data for this page
+     */
     const fetchData = async () => {
+        //Create a constant called leagues where the leagues will be stored
+        //Call the leagueService and get all leagues
         const leagues = await leagueService.getAllLeagues();
+        //set the leages to the global constant
         setLeagues(leagues)
     }
 
+    /**
+     * This function will create a league with the prop variables sent to it
+     * @param {*} event - Event that will fire rendering 
+     */
     const handleSubmit = async (event) => {
+        //Prevent event re-rendering
         event.preventDefault();
 
+        //Put all the league variables in json format
         let json = JSON.stringify({
             "leagueName" : leagueName,
             "isLocked" : "false",
@@ -53,15 +86,20 @@ export default function Component(props) {
             "teamsId" : []
         })
 
+        //Call the leagueService to override/create in the database
+        //NOTE - mongodb save upserts data no need for edit
         let status = leagueService.createLeague(json);
 
+        //if there is a result refresh the page
         if (status !== "") {
             window.location.reload();
         } else {
+            //Else give error to user
             alert("Failed to Create League")
         }
     }
 
+    //Call use effect to render the data
     useEffect(() => {
         fetchData();
     }, []);

@@ -1,3 +1,12 @@
+/*  Hermes Mimini
+ *  CST-452: Professor Mark Reha
+ *  Version 1.0
+ *  Sprint 2: 02/07/2021
+ * 
+ * This will allow the user to make a league view 
+ */
+
+//Import all the necessary components for the page 
 import React, { useState, useEffect } from "react";
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -29,23 +38,37 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+/**
+ * The class will be a form with league name and data validation
+ * @param {*} props 
+ * @returns 
+ */
 export default function Component(props) {
+
+    //state variables necessary for the page
     const classes = useStyles();
     const [leagues, setLeagues] = useState([]);
     const [leagueName, setLeagueName] = useState();
 
+    //on change function to notice when the user is rendering
     const onChangeLeagueName = (event) => {
         setLeagueName(event.target.value);
     }
 
+    //Fetch data will grab all the leagues and store them to the state variable
     const fetchData = async () => {
         const leagues = await leagueService.getAllLeagues();
         setLeagues(leagues)
     }
 
+    /**
+     * Handle submit function that will render after the admin creates a league
+     */
     const handleSubmit = async (event) => {
+        //stop default rendering from event
         event.preventDefault();
 
+        //convert the league information to json with the changes
         let json = JSON.stringify({
             "_id" : props.league._id,
             "leagueName" : leagueName,
@@ -53,15 +76,22 @@ export default function Component(props) {
             "matches" : props.league.matches
         })
 
+        //run the service command to create the league
         let status = leagueService.createLeague(json);
 
+        //if sucessful refresh the page
         if (status !== "") {
             window.location.reload();
         } else {
+            //else notify the user of the error
             alert("Failed to Create League")
         }
     }
 
+    /**
+     * This method will call the asynchronous call in order for the page to render after
+     * the data is recieved fromt the API Call
+     */
     useEffect(() => {
         fetchData();
     }, []);

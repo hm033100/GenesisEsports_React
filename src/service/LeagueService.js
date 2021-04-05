@@ -1,9 +1,23 @@
+/*  Hermes Mimini
+ *  CST-452: Professor Mark Reha
+ *  Version 1.0
+ *  Sprint 2: 02/07/2021
+ * 
+ *  This class is the UserService class and it is resposible for the AXIOS calls to spring.
+ */
+
+//import axios to the service
 import axios from 'axios';
 
 class LeagueService {
+
+    /**
+     * 
+     * @returns 
+     */
     async getAllLeagues(){
 
-        const response = await axios.get("http://localhost:8080/leagues");
+        const response = await axios.get("https://genesis-esports.herokuapp.com/leagues");
         return response.data;
     }
 
@@ -15,7 +29,7 @@ class LeagueService {
             }
         };
 
-        const response = await axios.post("http://localhost:8080/leagues/id", json, axiosConfig);
+        const response = await axios.post("https://genesis-esports.herokuapp.com/leagues/id", json, axiosConfig);
         return response.data;
     }
 
@@ -28,7 +42,7 @@ class LeagueService {
             }
         };
 
-        const response = await axios.post("http://localhost:8080/leagues/save", json, axiosConfig);
+        const response = await axios.post("https://genesis-esports.herokuapp.com/leagues/save", json, axiosConfig);
         return response.data;
     }
 
@@ -41,7 +55,7 @@ class LeagueService {
             }
         };
 
-        const response = await axios.post("http://localhost:8080/leagues/delete", json, axiosConfig);
+        const response = await axios.post("https://genesis-esports.herokuapp.com/leagues/delete", json, axiosConfig);
         return response.data;
     }
 }

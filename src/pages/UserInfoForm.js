@@ -49,7 +49,6 @@ export default function Component(props) {
     let history = useHistory();
 
     /**
-     * (WORK IN PROGRESS)
      * This is an asynchronos method that will put the properties in JSON format from the text boxes
      * and will call the edit user command from the User Service
      * @param {*} event 
